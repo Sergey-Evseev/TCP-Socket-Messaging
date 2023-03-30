@@ -80,8 +80,15 @@ namespace TCP_Socket_Messaging
                 //await keyword is used to asynchronously wait for the completion
                 //of these operations.
 
-                //добавление полученного сообщения в список
-                messageList.Items.Add(s);
+                //добавление полученного сообщения в конец списка
+                messageList.Invoke((MethodInvoker)delegate 
+                {
+                    messageList.Items.Add(s);
+                    messageList.TopIndex = messageList.Items.Count - 1; 
+                    // set the TopIndex to the last item in the list
+                });
+
+
                 cl.Close();
 
                 //при получении сообщения EXIT завершить приложение
