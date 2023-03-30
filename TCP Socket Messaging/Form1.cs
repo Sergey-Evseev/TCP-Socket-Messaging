@@ -33,12 +33,20 @@ namespace TCP_Socket_Messaging
                 list = new TcpListener(IPAddress.Parse(textBox1.Text),
                     Convert.ToInt32(textBox2.Text));
 
+                //============================================
+                //захардкоренный прием с сетевых адресов
+                //IPAddress ipAddress = IPAddress.Parse("10.9.0.18");
+                //int port = 8080;
+                //list = new TcpListener(ipAddress, port);
+                //============================================
+
                 //начало прослушивания клиентов
                 list.Start();
                 //создание отдельного потока для чтения сообщения
                 Thread thread = new Thread(new ThreadStart(ThreadFun));
                 thread.IsBackground = true;
                 thread.Start();
+                MessageBox.Show("Server Listening");
             }
             catch (SocketException sockEx)
             {
