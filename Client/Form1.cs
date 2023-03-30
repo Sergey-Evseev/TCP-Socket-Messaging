@@ -19,7 +19,7 @@ namespace Client
     public partial class Form1 : Form
     {
 
-        TcpClient client;
+        TcpClient client; //CLIENT
         public Form1()
         {
             InitializeComponent();

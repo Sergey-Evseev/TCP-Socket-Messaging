@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 using System.Xml.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.InteropServices;
 
 namespace TCP_Socket_Messaging
 {
@@ -22,9 +24,9 @@ namespace TCP_Socket_Messaging
         {
             InitializeComponent();
         }
-        TcpListener list;
+        TcpListener list; //SERVER
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             try 
             {
@@ -42,11 +44,13 @@ namespace TCP_Socket_Messaging
 
                 //начало прослушивания клиентов
                 list.Start();
-                //создание отдельного потока для чтения сообщения
-                Thread thread = new Thread(new ThreadStart(ThreadFun));
-                thread.IsBackground = true;
-                thread.Start();
+
+                //ThreadFun method is called using the await keyword to asynchronously
+                //wait for its completion. This allows the UI thread to continue
+                //executing while the server is listening for incoming connections
+                //and handling requests asynchronously:
                 MessageBox.Show("Server Listening");
+                await ThreadFun();
             }
             catch (SocketException sockEx)
             {
@@ -57,18 +61,25 @@ namespace TCP_Socket_Messaging
                 MessageBox.Show("Error: " + Ex.Message);
             }
         }
-        void ThreadFun()
+        async Task ThreadFun()
         {
             while(true)
             {
                 //сервер сообщает клиенту о готовности к соединению
                 //AcceptTcpClient() method of a TcpListener object
                 //TcpClient object that represents the client's endpoint for the communication
-                TcpClient cl = list.AcceptTcpClient();
+                TcpClient cl = await list.AcceptTcpClientAsync();
+                //- AcceptTcpClientAsync method is used to asynchronously wait
+                //for an incoming connection
 
                 //чтение данных из сети в формате Unicode
                 StreamReader sr = new StreamReader(cl.GetStream(), Encoding.Unicode);
-                string s = sr.ReadLine();
+                string s =await sr.ReadLineAsync();
+                //-ReadLineAsync method is used to read data
+                //from the network stream asynchronously
+                //await keyword is used to asynchronously wait for the completion
+                //of these operations.
+
                 //добавление полученного сообщения в список
                 messageList.Items.Add(s);
                 cl.Close();
@@ -81,7 +92,6 @@ namespace TCP_Socket_Messaging
                 }
 
             }
-
         }
         //If the object TcpListener is not null, it calls its Stop() method
         //to stop listening for incoming connections.
