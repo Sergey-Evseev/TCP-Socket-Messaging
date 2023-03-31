@@ -23,6 +23,13 @@ namespace TCP_Socket_Messaging
         public Form1()
         {
             InitializeComponent();
+
+            // Set the form's border style to FixedSingle
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            // Set the form's minimum and maximum size to the same value
+            this.MinimumSize = new Size(476, 217);
+            this.MaximumSize = new Size(476, 217);
         }
         TcpListener list; //SERVER
 

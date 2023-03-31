@@ -25,6 +25,13 @@ namespace Client
         {
             InitializeComponent();
             textBox3.KeyPress += new KeyPressEventHandler(textBox3_KeyPress);
+
+            // Set the form's border style to FixedSingle
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            // Set the form's minimum and maximum size to the same value
+            this.MinimumSize = new Size(459, 155);
+            this.MaximumSize = new Size(459, 155);
         }
 
         private async void button1_Click(object sender, EventArgs e)
