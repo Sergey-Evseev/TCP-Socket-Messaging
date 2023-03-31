@@ -86,6 +86,7 @@ namespace TCP_Socket_Messaging
                     messageList.Items.Add(s);
                     messageList.TopIndex = messageList.Items.Count - 1; 
                     // set the TopIndex to the last item in the list
+                    // (allways scrolled down)
                 });
 
 
