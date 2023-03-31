@@ -24,11 +24,26 @@ namespace Client
         public Form1()
         {
             InitializeComponent();
+            textBox3.KeyPress += new KeyPressEventHandler(textBox3_KeyPress);
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            try 
+            await SendMessage();
+        }
+
+        private async void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; // To prevent beep sound on Enter key press
+                await SendMessage();
+            }
+        }
+
+        private async Task SendMessage()
+        {
+            try
             {
                 //The TcpClient class is a .NET Framework class used to create a client-side connection
                 //to a server using TCP. After creating an instance of TcpClient, you can use
@@ -36,21 +51,16 @@ namespace Client
                 client = new TcpClient();
 
                 //установка соединения с использованием данных IP и номера порта
-                //await keyword to asynchronously wait for tasks to complete
                 await client.ConnectAsync(IPAddress.Parse(textBox1.Text),
                     Convert.ToInt32(textBox2.Text));
-                
                 //получение сетевого потока
                 NetworkStream nstream = client.GetStream();
-                
                 //преобразование строки сообщения в массив байт
                 byte[] barray = Encoding.Unicode.GetBytes(textBox3.Text);
-                
                 //запись в сетевой поток всего массива
-                //await keyword to asynchronously wait for tasks to complete
                 await nstream.WriteAsync(barray, 0, barray.Length); //byte array, offset, number of bytes to write to stream
                 //закрытие клиента
-                client.Close();                
+                client.Close();
             }
             catch (SocketException sockEx)
             {
@@ -60,12 +70,11 @@ namespace Client
             {
                 MessageBox.Show("Error: " + Ex.Message);
             }
-
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (client != null) client.Close();
         }
-    }
+    }//end of Form1
 }
